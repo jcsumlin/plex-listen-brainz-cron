@@ -14,7 +14,7 @@ RUN pip install poetry
 RUN poetry install
 
 # Copy the rest of the application code to the container
-COPY . .
+COPY main.py ./
 
 VOLUME [ "/data" ]
 
