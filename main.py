@@ -10,6 +10,7 @@ load_dotenv()
 TOKEN = os.getenv('LISTENBRAINZ_TOKEN')
 TAUTULLI_API_KEY = os.getenv('TAUTULLI_API_KEY')
 TAUTULLI_URL = os.getenv('TAUTULLI_URL')
+DEBUG = os.getenv('DEBUG')
 client = pylistenbrainz.ListenBrainz()
 client.set_auth_token(TOKEN)
 with open('last_track.txt', 'r') as f:
@@ -49,9 +50,15 @@ for track in filtered_history:
         listening_from='PlexAmp'
     )
     print("Recording new Listen for {}".format(track['full_title']))
+    if DEBUG:
+        continue
     client.submit_single_listen(new_listen)
+if DEBUG:
+    print('New last track date: {}'.format(filtered_history[0]['date']))
+    print('Debug mode enabled, exiting')
+    exit()
 with open('last_track.txt', 'w') as f:
-    f.write(str(history['data'][0]["date"]))
+    f.write(str(filtered_history[0]["date"]))
 
 
 # recs = client.get_user_recommendation_recordings('liquidWiFi')
