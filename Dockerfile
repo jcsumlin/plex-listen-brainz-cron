@@ -18,5 +18,7 @@ COPY . .
 
 VOLUME [ "/data" ]
 
+LABEL org.opencontainers.image.source https://github.com/jcsumlin/plex-listen-brainz-cron
+
 # Command to run the application
 CMD ["poetry", "run", "python", "main.py"]
