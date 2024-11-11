@@ -11,7 +11,9 @@ services:
       ofelia.job-local.my-test-job.command: "date"
 
   plex-listen-brainz:
-    build: .
+    image: ghcr.io/jcsumlin/plex-listen-brainz-cron/plex-listen-brainz-cron:latest
+    env_file:
+      - .env
     volumes:
       - data:/data
     labels:
