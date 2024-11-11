@@ -10,7 +10,7 @@ load_dotenv()
 TOKEN = os.getenv('LISTENBRAINZ_TOKEN')
 TAUTULLI_API_KEY = os.getenv('TAUTULLI_API_KEY')
 TAUTULLI_URL = os.getenv('TAUTULLI_URL')
-DEBUG = os.getenv('DEBUG')
+DEBUG = bool(os.getenv('DEBUG'))
 client = pylistenbrainz.ListenBrainz()
 client.set_auth_token(TOKEN)
 with open('last_track.txt', 'r') as f:
