@@ -18,7 +18,7 @@ services:
       - data:/data
     labels:
       ofelia.enabled: "true"
-      ofelia.job-exec.listenbrainz.schedule: "@every 1d"
+      ofelia.job-exec.listenbrainz.schedule: "@daily"
       ofelia.job-exec.listenbrainz.command: "poetry run python main.py"
 
 volumes:
