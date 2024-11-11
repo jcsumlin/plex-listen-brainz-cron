@@ -15,7 +15,7 @@ services:
     env_file:
       - .env
     volumes:
-      - .:/data
+      - /root/plex-listen-brainz-cron:/data
     labels:
       ofelia.enabled: "true"
       ofelia.job-exec.listenbrainz.schedule: "@daily"
