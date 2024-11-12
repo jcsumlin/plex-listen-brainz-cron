@@ -12,7 +12,8 @@ logger = logging.getLogger(__name__)
 TAUTULLI_API_KEY = os.getenv('TAUTULLI_API_KEY')
 TAUTULLI_URL = os.getenv('TAUTULLI_URL')
 PLEX_USER = os.getenv('PLEX_USER')
-
+if [TAUTULLI_API_KEY, TAUTULLI_URL, PLEX_USER].count(None) > 0:
+    raise ValueError('TAUTULLI_API_KEY, TAUTULLI_URL, and PLEX_USER must be set in the environment')
 
 def read_last_track_date():
     with open('last_track.txt', 'r') as f:

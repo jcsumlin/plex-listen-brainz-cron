@@ -24,6 +24,7 @@ if __name__ == '__main__':
     logger.debug('{} new listens found, submitting to ListenBrainz'.format(len(history)))
     for track in history:
         listen_brainz.create_listen(track)
+
     gotify.send_log('ListenBrainz submission', 'Submitted {} listens to ListenBrainz\n{}'.format(len(history), '\n - '.join([track['full_title'] for track in history])))
     if DEBUG:
         logger.debug('New last track date: {}'.format(history[0]['date']))

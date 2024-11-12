@@ -7,6 +7,10 @@ load_dotenv()
 
 TOKEN = os.getenv('LISTENBRAINZ_TOKEN')
 DEBUG = bool(os.getenv('DEBUG'))
+
+if not TOKEN:
+    raise ValueError('LISTENBRAINZ_TOKEN must be set in the environment')
+
 client = pylistenbrainz.ListenBrainz()
 client.set_auth_token(TOKEN)
 
