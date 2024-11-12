@@ -1,64 +1,35 @@
 import os
 from dotenv import load_dotenv
 
-from tautulli import RawAPI
-import pylistenbrainz
-import datetime
+from gotify_api import gotify
+from listen_brainz import listen_brainz
+from tautulli_api import get_history
+import logging
 load_dotenv()
 
+logging.basicConfig(level=logging.DEBUG, format="%(levelname)s:%(name)s:%(message)s")
+logger = logging.getLogger(__name__)
 
-TOKEN = os.getenv('LISTENBRAINZ_TOKEN')
-TAUTULLI_API_KEY = os.getenv('TAUTULLI_API_KEY')
-TAUTULLI_URL = os.getenv('TAUTULLI_URL')
+
 DEBUG = bool(os.getenv('DEBUG'))
-client = pylistenbrainz.ListenBrainz()
-client.set_auth_token(TOKEN)
-with open('last_track.txt', 'r') as f:
-    last_track_date = f.read()
-    try:
-        ts = int(last_track_date)
-        filter_date = datetime.datetime.fromtimestamp(ts, datetime.UTC)
-    except ValueError:
-        filter_date = datetime.datetime.now()
 
-def filter_history(history, filter_date):
-    tracks = []
-    for track in history:
-        if datetime.datetime.fromtimestamp(track['date'], datetime.UTC) > filter_date:
-            if track['percent_complete'] <= 50:
-                print("Skipping {} because it was not played for more than 50% of the track".format(track['full_title']))
-                continue
-            tracks.append(track)
-    return tracks
-    
-
-# Create Tautulli client
-taut = RawAPI(api_key=TAUTULLI_API_KEY, base_url=TAUTULLI_URL)
-history = taut.get_history(user='jcsumlin', media_type='track', after=filter_date)
-# Filter out tracks that have already been submitted
-# THe after param should have taken care of this but it seems to be broken
-filtered_history = filter_history(history['data'], filter_date)
-
-if len(filtered_history) == 0:
-    print('No new listens')
-    exit()
-for track in filtered_history:
-    new_listen = pylistenbrainz.Listen(
-        track_name=track['title'],
-        artist_name=track['grandparent_title'],
-        listened_at=track['date'],
-        listening_from='PlexAmp'
-    )
-    print("Recording new Listen for {}".format(track['full_title']))
+if __name__ == '__main__':
+    logger.debug('Starting ListenBrainz submission process')
     if DEBUG:
-        continue
-    client.submit_single_listen(new_listen)
-if DEBUG:
-    print('New last track date: {}'.format(filtered_history[0]['date']))
-    print('Debug mode enabled, exiting')
-    exit()
-with open('last_track.txt', 'w') as f:
-    f.write(str(filtered_history[0]["date"]))
+        logger.debug('Debug mode enabled')
+    history = get_history.get_history()
+    if len(history) == 0:
+        logger.debug('No new listens, exiting...')
+        exit()
+    logger.debug('{} new listens found, submitting to ListenBrainz'.format(len(history)))
+    for track in history:
+        listen_brainz.create_listen(track)
+    gotify.send_log('ListenBrainz submission', 'Submitted {} listens to ListenBrainz\n{}'.format(len(history), '\n - '.join([track['full_title'] for track in history])))
+    if DEBUG:
+        logger.debug('New last track date: {}'.format(history[0]['date']))
+        logger.debug('Debug mode enabled, exiting')
+        exit()
+    get_history.write_last_track_date(str(history[0]['date']))
 
 
 # recs = client.get_user_recommendation_recordings('liquidWiFi')

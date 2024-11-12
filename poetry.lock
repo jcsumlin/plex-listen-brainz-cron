@@ -178,6 +178,24 @@ files = [
 ]
 
 [[package]]
+name = "gotify"
+version = "0.6.0"
+description = "Access your gotify server."
+optional = false
+python-versions = ">=3.9"
+files = [
+    {file = "gotify-0.6.0-py3-none-any.whl", hash = "sha256:184faec76de78279c5acd6e21dfefd11223d74a816b607f1063ac22df40641b2"},
+    {file = "gotify-0.6.0.tar.gz", hash = "sha256:47bdc0332143cd5c251e284ffa487467429c624a1d40aefb013774f6f4dd4b7d"},
+]
+
+[package.dependencies]
+httpx = ">=0.22.0"
+
+[package.extras]
+stream = ["websockets (>=10.3)"]
+test = ["pytest (>=7.1.2)", "pytest-asyncio (>=0.18.3)", "pytest-cov (>=3.0.0)", "typeguard (>=4.1.5)"]
+
+[[package]]
 name = "h11"
 version = "0.14.0"
 description = "A pure-Python, bring-your-own-I/O implementation of HTTP/1.1"
@@ -625,4 +643,4 @@ dev = ["black", "build", "coveralls (==3.*)", "flake8", "isort", "mypy", "pytest
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.12"
-content-hash = "3c282505d30540ff6238d090db2e013fdd5f1787ccde28b057391efc03b82cee"
+content-hash = "a896a32a7169168a5d7a17b17c038da76d27b3d47bfe43fdae02d23b326ac535"

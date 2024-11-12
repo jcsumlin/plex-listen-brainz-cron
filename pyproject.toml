@@ -11,6 +11,7 @@ requests = "^2.32.3"
 tautulli = "^4.3.4.2140"
 pylistenbrainz = "^0.5.1"
 python-dotenv = "^1.0.1"
+gotify = "^0.6.0"
 
 
 [build-system]
