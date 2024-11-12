@@ -9,6 +9,7 @@ services:
     labels:
       ofelia.job-local.my-test-job.schedule: "@every 5s"
       ofelia.job-local.my-test-job.command: "date"
+      com.centurylinklabs.watchtower.enable: "true"
 
   plex-listen-brainz:
     image: ghcr.io/jcsumlin/plex-listen-brainz-cron/plex-listen-brainz-cron:latest
@@ -20,3 +21,14 @@ services:
       ofelia.enabled: "true"
       ofelia.job-exec.listenbrainz.schedule: "@daily"
       ofelia.job-exec.listenbrainz.command: "poetry run python main.py"
+      com.centurylinklabs.watchtower.enable: "true"
+
+  watchtower:
+    image: containrrr/watchtower:latest
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    command: --interval 30
+    environment:
+      WATCHTOWER_CLEANUP: "true"
+      WATCHTOWER_INCLUDE_STOPPED: "true"
+      WATCHTOWER_LABEL_ENABLE: "true"
