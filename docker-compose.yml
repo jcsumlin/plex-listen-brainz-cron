@@ -6,9 +6,16 @@ services:
     command: daemon --docker
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
+    env_file:
+      - .env
     labels:
       ofelia.job-local.my-test-job.schedule: "@every 5s"
       ofelia.job-local.my-test-job.command: "date"
+      ofelia.job-run.listenbrainz.schedule: "@every 10m"
+      ofelia.job-run.listenbrainz.command: "poetry run python main.py"
+      ofelia.job-run.listenbrainz.volume: "/root/plex-listen-brainz-cron:/app"
+      ofelia.job-run.listenbrainz.image: "ghcr.io/jcsumlin/plex-listen-brainz-cron/plex-listen-brainz-cron:latest"
+      ofelia.job-run.listenbrainz.environment: '["LISTENBRAINZ_TOKEN=${LISTENBRAINZ_TOKEN}", "TAUTULLI_API_KEY=${TAUTULLI_API_KEY}", "TAUTULLI_URL=${TAUTULLI_URL}", "GOTIFY_URL=${GOTIFY_URL}", "GOTIFY_APP_TOKEN=${GOTIFY_APP_TOKEN}", "PLEX_USER=${PLEX_USER}"]'
       com.centurylinklabs.watchtower.enable: "true"
 
   plex-listen-brainz:
@@ -18,9 +25,6 @@ services:
     volumes:
       - /root/plex-listen-brainz-cron:/app
     labels:
-      ofelia.enabled: "true"
-      ofelia.job-exec.listenbrainz.schedule: "@daily"
-      ofelia.job-exec.listenbrainz.command: "poetry run python main.py"
       com.centurylinklabs.watchtower.enable: "true"
 
   watchtower:
